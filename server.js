@@ -13,6 +13,8 @@ const PORT = process.env.PORT;
 
 
 const getUserData = require('./model')
+const addBookHandler = require('./model')
+const deleteBook = require('./model')
 
 
 // mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -71,6 +73,10 @@ const getUserData = require('./model')
 
 // http://localhost:3001/books?email=mahmoudkhader2010@gmail.com
 app.get('/books',getUserData);
+
+app.post('/addbook',addBookHandler);
+
+app.delete('/deletebook/:bookIndex', deleteBook);
 
 
 function homePageHandler(req, res) {

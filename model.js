@@ -2,6 +2,8 @@
 const mongoose = require ('mongoose');
 
 module.exports = getUserData;
+// module.exports = addBookHandler;
+// module.exports = deleteBook;
 
 
 mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -55,4 +57,61 @@ function getUserData(req,res){
             res.send(userData)
         }
     })
+}
+
+
+function addBookHandler(req, res) {
+
+    let { email, name, description, status, img } = req.body;
+
+    myUserModel.find({ email: email }, function (error, userData) {
+        if (error) {
+            res.send('did not work')
+        } else {
+            userData[0].books.push({
+                name: name,
+                description: description,
+                status: status,
+                img: img
+            })
+            userData[0].save();
+            res.send(userData[0].books)
+
+        }
+    })
+
+
+
+
+}
+
+function deleteBook(req, res) {
+    let emailReq = req.query.email;
+    let indexReq = Number(req.params.bookIndex);
+
+
+    myUserModel.find({ email: emailReq }, function (error, userData) {
+        if (error) {
+            res.send('did not work')
+        } else {
+
+            let dataAfterDelete = userData[0].books.filter((book, index) => {
+                if (index !== indexReq) { return book }
+            })
+            userData[0].books = dataAfterDelete;
+
+            userData[0].save();
+
+            res.send(userData[0].books);
+
+
+
+
+
+
+        }
+    })
+
+
+
 }
