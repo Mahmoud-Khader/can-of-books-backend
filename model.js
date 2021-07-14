@@ -1,10 +1,13 @@
 'use strict';
 const mongoose = require ('mongoose');
+const express = require ('express');
+const appsObj = require ('./server')
 
-module.exports = getUserData;
+appsObj.app.use(express.json());
 // module.exports = addBookHandler;
 // module.exports = deleteBook;
 
+let functionHandlers={}
 
 mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -48,7 +51,7 @@ function seedUserCollection(){
 // seedUserCollection();
 
 
-function getUserData(req,res){
+functionHandlers.getUserData= (req,res)=>{
     let email=req.query.email
     myUserModel.find({email:email},function(error,userData){
         if(error){
@@ -60,9 +63,10 @@ function getUserData(req,res){
 }
 
 
-function addBookHandler(req, res) {
+functionHandlers.addBookHandler=(req, res)=> {
 
     let { email, name, description, status, img } = req.body;
+    console.log('sssssssssssssssssss',req.body)
 
     myUserModel.find({ email: email }, function (error, userData) {
         if (error) {
@@ -85,7 +89,7 @@ function addBookHandler(req, res) {
 
 }
 
-function deleteBook(req, res) {
+functionHandlers.deleteBook=(req, res)=> {
     let emailReq = req.query.email;
     let indexReq = Number(req.params.bookIndex);
 
@@ -115,3 +119,5 @@ function deleteBook(req, res) {
 
 
 }
+
+module.exports = functionHandlers;

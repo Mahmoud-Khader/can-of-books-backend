@@ -8,13 +8,15 @@ require('dotenv').config();
 const app=express();
 app.use(cors());
 
+let appsObj={'app':app}
+module.exports=appsObj;
 
 const PORT = process.env.PORT;
 
 
-const getUserData = require('./model')
-const addBookHandler = require('./model')
-const deleteBook = require('./model')
+const functionHandlers = require('./model')
+// const addBookHandler = require('./model')
+// const deleteBook = require('./model')
 
 
 // mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -72,11 +74,11 @@ const deleteBook = require('./model')
 
 
 // http://localhost:3001/books?email=mahmoudkhader2010@gmail.com
-app.get('/books',getUserData);
+app.get('/books',functionHandlers.getUserData);
 
-app.post('/addbook',addBookHandler);
+app.post('/addbook',functionHandlers.addBookHandler);
 
-app.delete('/deletebook/:bookIndex', deleteBook);
+app.delete('/deletebook/:bookIndex', functionHandlers.deleteBook);
 
 
 function homePageHandler(req, res) {
