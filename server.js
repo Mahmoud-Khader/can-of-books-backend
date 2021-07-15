@@ -76,9 +76,14 @@ const functionHandlers = require('./model')
 // http://localhost:3001/books?email=mahmoudkhader2010@gmail.com
 app.get('/books',functionHandlers.getUserData);
 
+// localhost:3001/addbook?name=fluffy&description=baldi&status=razan&img=hello
 app.post('/addbook',functionHandlers.addBookHandler);
 
+// localhost:3001/deletebook/1?email=mahmoudkhader2010@gmail.com
 app.delete('/deletebook/:bookIndex', functionHandlers.deleteBook);
+
+// localhost:3001/updateBook/1
+app.put('/updateBook/:bookIndex',functionHandlers.updateBookHandler)
 
 
 function homePageHandler(req, res) {
