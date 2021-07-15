@@ -9,7 +9,7 @@ appsObj.app.use(express.json());
 
 let functionHandlers={}
 
-mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const BookSchema = new mongoose.Schema({
     name:String,
@@ -96,7 +96,7 @@ functionHandlers.deleteBook=(req, res)=> {
 
     myUserModel.find({ email: emailReq }, function (error, userData) {
         if (error) {
-            res.send('did not work')
+            res.send('did not work',error)
         } else {
 
             let dataAfterDelete = userData[0].books.filter((book, index) => {
@@ -118,6 +118,29 @@ functionHandlers.deleteBook=(req, res)=> {
 
 
 
+}
+
+functionHandlers.updateBookHandler=(req,res)=>{
+    console.log(req.body);
+    let { email, name, description, status, img } = req.body;
+
+    // let emailReq = req.query.email;
+    let indexReq=Number(req.params.bookIndex);
+
+    myUserModel.findOne({email:email},(error,userData)=>{
+        if(error) res.send('error in finding the book data',error)
+        else{
+            userData.books.splice(indexReq,1,{
+                name:name,
+                description:description,
+                status:status,
+                img:img
+            })
+            userData.save();
+            res.send(userData.books)
+        }
+        })
+    
 }
 
 module.exports = functionHandlers;
