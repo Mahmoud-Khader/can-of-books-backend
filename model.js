@@ -9,7 +9,7 @@ appsObj.app.use(express.json());
 
 let functionHandlers={}
 
-mongoose.connect('mongodb://mahmoud-khader:mahmoud123456789@cluster0-shard-00-00.jl0oe.mongodb.net:27017,cluster0-shard-00-01.jl0oe.mongodb.net:27017,cluster0-shard-00-02.jl0oe.mongodb.net:27017/bookapp?ssl=true&replicaSet=atlas-kjytph-shard-0&authSource=admin&retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const BookSchema = new mongoose.Schema({
     name:String,
