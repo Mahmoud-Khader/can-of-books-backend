@@ -1,8 +1,13 @@
 'use strict';
 const mongoose = require ('mongoose');
+const express = require ('express');
+const appsObj = require ('./server')
 
-module.exports = getUserData;
+appsObj.app.use(express.json());
+// module.exports = addBookHandler;
+// module.exports = deleteBook;
 
+let functionHandlers={}
 
 mongoose.connect('mongodb://localhost:27017/books', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -46,7 +51,7 @@ function seedUserCollection(){
 // seedUserCollection();
 
 
-function getUserData(req,res){
+functionHandlers.getUserData= (req,res)=>{
     let email=req.query.email
     myUserModel.find({email:email},function(error,userData){
         if(error){
@@ -56,3 +61,63 @@ function getUserData(req,res){
         }
     })
 }
+
+
+functionHandlers.addBookHandler=(req, res)=> {
+
+    let { email, name, description, status, img } = req.body;
+    console.log('sssssssssssssssssss',req.body)
+
+    myUserModel.find({ email: email }, function (error, userData) {
+        if (error) {
+            res.send('did not work')
+        } else {
+            userData[0].books.push({
+                name: name,
+                description: description,
+                status: status,
+                img: img
+            })
+            userData[0].save();
+            res.send(userData[0].books)
+
+        }
+    })
+
+
+
+
+}
+
+functionHandlers.deleteBook=(req, res)=> {
+    let emailReq = req.query.email;
+    let indexReq = Number(req.params.bookIndex);
+
+
+    myUserModel.find({ email: emailReq }, function (error, userData) {
+        if (error) {
+            res.send('did not work')
+        } else {
+
+            let dataAfterDelete = userData[0].books.filter((book, index) => {
+                if (index !== indexReq) { return book }
+            })
+            userData[0].books = dataAfterDelete;
+
+            userData[0].save();
+
+            res.send(userData[0].books);
+
+
+
+
+
+
+        }
+    })
+
+
+
+}
+
+module.exports = functionHandlers;
